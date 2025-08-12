@@ -11,8 +11,9 @@ export const listReviews = async (req, res, next) => {
 
 export const createReview = async (req, res, next) => {
   try {
+    if ("_id" in req.body) delete req.body._id;
     const review = await Review.create(req.body);
-    res.status(201).json(review);
+    return res.status(201).json(review);
   } catch (e) { next(e); }
 };
 

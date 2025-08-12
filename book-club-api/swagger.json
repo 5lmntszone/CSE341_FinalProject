@@ -343,7 +343,7 @@
         "tags": [
           "Reviews"
         ],
-        "summary": "List reviews (optionally filter by book)",
+        "summary": "List reviews (optionally filter by bookId)",
         "parameters": [
           {
             "in": "query",
@@ -367,6 +367,26 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad request (invalid query parameters)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -380,7 +400,28 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Review"
+                "type": "object",
+                "required": [
+                  "bookId",
+                  "userName",
+                  "rating"
+                ],
+                "properties": {
+                  "bookId": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "comment": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -396,8 +437,25 @@
               }
             }
           },
-          "422": {
-            "description": "Validation error"
+          "400": {
+            "description": "Bad request (invalid body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -422,8 +480,25 @@
           "200": {
             "description": "Review deleted"
           },
-          "404": {
-            "description": "Review not found"
+          "400": {
+            "description": "Bad request (invalid reviewId)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -506,11 +581,11 @@
               "properties": {
                 "msg": {
                   "type": "string",
-                  "example": "title must not be empty"
+                  "example": "bookId must be a valid MongoId"
                 },
                 "param": {
                   "type": "string",
-                  "example": "title"
+                  "example": "bookId"
                 },
                 "location": {
                   "type": "string",
@@ -547,7 +622,7 @@
           },
           "bookId": {
             "type": "string",
-            "example": "66b8a3c2b6dcb1a2f0b1cdef"
+            "example": "64b5d2fbcf1c8b0012a1a456"
           },
           "userName": {
             "type": "string",
@@ -561,7 +636,7 @@
           },
           "comment": {
             "type": "string",
-            "example": "Loved the practical tips!"
+            "example": "Loved the pacing and characters."
           },
           "createdAt": {
             "type": "string",
