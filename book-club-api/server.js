@@ -23,10 +23,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
   console.log("MongoDB connected");
   app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
