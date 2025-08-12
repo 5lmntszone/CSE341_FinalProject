@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "generate-swagger": "node generateSwagger.js"
+    "generate-swagger": "node generateSwagger.js",
+    "build": "npm run generate-swagger"
   },
   "dependencies": {
     "cors": "^2.8.5",
