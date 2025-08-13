@@ -43,6 +43,10 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *               msg: { type: string }
  *               param: { type: string }
  *               location: { type: string }
+ *     UnauthorizedResponse:
+ *       type: object
+ *       properties:
+ *         message: { type: string, example: Not authenticated }
  *     ServerErrorResponse:
  *       type: object
  *       properties:
@@ -111,6 +115,11 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/UnauthorizedResponse' }
  *       500:
  *         description: Internal server error
  *         content:
@@ -179,6 +188,11 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/UnauthorizedResponse' }
  *       500:
  *         description: Internal server error
  *         content:
@@ -201,6 +215,11 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/UnauthorizedResponse' }
  *       500:
  *         description: Internal server error
  *         content:

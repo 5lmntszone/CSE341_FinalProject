@@ -1,11 +1,17 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { runValidation } from "../middleware/validate.js";
+import requireAuth from "../middleware/requireAuth.js";
 import { listReviews, createReview, deleteReview } from "../controllers/reviewsController.js";
 
 /**
  * @openapi
  * components:
+ *   securitySchemes:
+ *     cookieAuth:
+ *       type: apiKey
+ *       in: cookie
+ *       name: connect.sid
  *   schemas:
  *     Review:
  *       type: object
@@ -47,6 +53,12 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *               msg: { type: string, example: "bookId must be a valid MongoId" }
  *               param: { type: string, example: "bookId" }
  *               location: { type: string, example: "body" }
+ *     UnauthorizedResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: Not authenticated
  *     ServerErrorResponse:
  *       type: object
  *       properties:
@@ -70,6 +82,11 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *         schema:
  *           type: string
  *         description: Filter reviews for a specific book
+ *       - in: query
+ *         name: forceError
+ *         schema:
+ *           type: boolean
+ *         description: Set to "true" to trigger a 500 error
  *     responses:
  *       200:
  *         description: Array of reviews
@@ -94,14 +111,15 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *   post:
  *     tags: [Reviews]
  *     summary: Create a review
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: forceError
  *         required: false
  *         description: Set to "true" to trigger a 500 error
  *         schema:
- *           type: string
- *           enum: [true]
+ *           type: boolean
  *     requestBody:
  *       required: true
  *       content:
@@ -130,6 +148,12 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
@@ -144,6 +168,8 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *   delete:
  *     tags: [Reviews]
  *     summary: Delete a review
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: reviewId
@@ -159,6 +185,12 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
@@ -191,6 +223,7 @@ router.post(
     body("rating").isInt({ min: 1, max: 5 }),
     body("comment").optional().isString().isLength({ max: 1000 })
   ],
+  requireAuth,
   runValidation,
   createReview
 );
@@ -198,6 +231,7 @@ router.post(
 router.delete(
   "/:reviewId",
   [ param("reviewId").isMongoId() ],
+  requireAuth,
   runValidation,
   deleteReview
 );

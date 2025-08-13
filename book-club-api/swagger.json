@@ -81,6 +81,11 @@
           "Books"
         ],
         "summary": "Create a new book",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "query",
@@ -160,6 +165,16 @@
               }
             }
           },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -228,6 +243,11 @@
           "Books"
         ],
         "summary": "Update a book",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -309,6 +329,16 @@
               }
             }
           },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -326,6 +356,11 @@
           "Books"
         ],
         "summary": "Delete a book",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -347,6 +382,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
               }
             }
@@ -378,6 +423,14 @@
               "type": "string"
             },
             "description": "Filter reviews for a specific book"
+          },
+          {
+            "in": "query",
+            "name": "forceError",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set to \"true\" to trigger a 500 error"
           }
         ],
         "responses": {
@@ -421,6 +474,11 @@
           "Reviews"
         ],
         "summary": "Create a review",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "query",
@@ -428,10 +486,7 @@
             "required": false,
             "description": "Set to \"true\" to trigger a 500 error",
             "schema": {
-              "type": "string",
-              "enum": [
-                true
-              ]
+              "type": "boolean"
             }
           }
         ],
@@ -487,6 +542,16 @@
               }
             }
           },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -506,6 +571,11 @@
           "Reviews"
         ],
         "summary": "Delete a review",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -530,6 +600,16 @@
               }
             }
           },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -545,6 +625,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "connect.sid"
+      }
+    },
     "schemas": {
       "Book": {
         "type": "object",
@@ -633,6 +720,15 @@
                 }
               }
             }
+          }
+        }
+      },
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Not authenticated"
           }
         }
       },

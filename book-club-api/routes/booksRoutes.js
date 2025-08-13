@@ -1,11 +1,17 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { runValidation } from "../middleware/validate.js";
+import requireAuth from "../middleware/requireAuth.js";
 import { listBooks, getBook, createBook, updateBook, deleteBook } from "../controllers/booksController.js";
 
 /**
  * @openapi
  * components:
+ *   securitySchemes:
+ *     cookieAuth:
+ *       type: apiKey
+ *       in: cookie
+ *       name: connect.sid
  *   schemas:
  *     Book:
  *       type: object
@@ -67,6 +73,12 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *               location:
  *                 type: string
  *                 example: "body"
+ *     UnauthorizedResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: Not authenticated
  *     ServerErrorResponse:
  *       type: object
  *       properties:
@@ -119,6 +131,8 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *   post:
  *     tags: [Books]
  *     summary: Create a new book
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: forceError
@@ -167,6 +181,12 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
@@ -210,6 +230,8 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *   put:
  *     tags: [Books]
  *     summary: Update a book
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -261,6 +283,12 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
@@ -270,6 +298,8 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *   delete:
  *     tags: [Books]
  *     summary: Delete a book
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: bookId
@@ -286,6 +316,12 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
@@ -331,6 +367,7 @@ router.post(
     body("coverImage").optional().isURL(),
     body("tags").optional().isArray()
   ],
+  requireAuth,
   runValidation,
   createBook
 );
@@ -349,6 +386,7 @@ router.put(
     body("coverImage").optional().isURL(),
     body("tags").optional().isArray()
   ],
+  requireAuth,
   runValidation,
   updateBook
 );
@@ -356,6 +394,7 @@ router.put(
 router.delete(
   "/:bookId",
   [ param("bookId").isMongoId() ],
+  requireAuth,
   runValidation,
   deleteBook
 );
