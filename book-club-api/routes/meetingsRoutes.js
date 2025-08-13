@@ -2,7 +2,13 @@ import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { runValidation } from "../middleware/validate.js";
 import requireAuth from "../middleware/requireAuth.js";
-import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting } from "../controllers/meetingsController.js";
+import {
+  listMeetings,
+  getMeeting,
+  createMeeting,
+  updateMeeting,
+  deleteMeeting
+} from "../controllers/meetingsController.js";
 
 /**
  * @openapi
@@ -17,24 +23,51 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *       type: object
  *       required: [title, bookId, organizerId, startsAt]
  *       properties:
- *         _id: { type: string }
- *         title: { type: string, example: "August Book Club" }
- *         bookId: { type: string, example: "64b5d2fbcf1c8b0012a1a456" }
- *         organizerId: { type: string, example: "64b5d2fbcf1c8b0012a1b999" }
- *         startsAt: { type: string, format: date-time, example: "2025-09-01T18:00:00.000Z" }
- *         isOnline: { type: boolean, example: true }
- *         meetingUrl: { type: string, format: uri, example: "https://meet.example.com/abc" }
- *         location: { type: string, example: "Library, Room 2" }
- *         notes: { type: string, example: "Bring snacks" }
+ *         _id:
+ *           type: string
+ *         title:
+ *           type: string
+ *           example: August Book Club
+ *         bookId:
+ *           type: string
+ *           example: 64b5d2fbcf1c8b0012a1a456
+ *         organizerId:
+ *           type: string
+ *           example: 64b5d2fbcf1c8b0012a1b999
+ *         startsAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2025-09-01T18:00:00.000Z
+ *         isOnline:
+ *           type: boolean
+ *           example: true
+ *         meetingUrl:
+ *           type: string
+ *           format: uri
+ *           example: https://meet.example.com/abc
+ *         location:
+ *           type: string
+ *           example: Library, Room 2
+ *         notes:
+ *           type: string
+ *           example: Bring snacks
  *         attendees:
  *           type: array
- *           items: { type: string }
- *         createdAt: { type: string, format: date-time }
- *         updatedAt: { type: string, format: date-time }
+ *           items:
+ *             type: string
+ *           example: ["64b5d2fbcf1c8b0012a1abcd","64b5d2fbcf1c8b0012a1abce"]
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  *     ValidationErrorResponse:
  *       type: object
  *       properties:
- *         message: { type: string, example: Validation error }
+ *         message:
+ *           type: string
+ *           example: Validation error
  *         errors:
  *           type: array
  *           items:
@@ -46,12 +79,18 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *     UnauthorizedResponse:
  *       type: object
  *       properties:
- *         message: { type: string, example: Not authenticated }
+ *         message:
+ *           type: string
+ *           example: Not authenticated
  *     ServerErrorResponse:
  *       type: object
  *       properties:
- *         message: { type: string, example: Internal server error }
- *         details: { type: string, example: Unexpected database error }
+ *         message:
+ *           type: string
+ *           example: Internal server error
+ *         details:
+ *           type: string
+ *           example: Unexpected database error
  */
 
 /**
@@ -67,10 +106,6 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *       - in: query
  *         name: organizerId
  *         schema: { type: string }
- *       - in: query
- *         name: forceError
- *         schema: { type: boolean }
- *         description: Set to "true" to trigger a 500 error
  *     responses:
  *       200:
  *         description: Array of meetings
@@ -92,18 +127,35 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *   post:
  *     tags: [Meetings]
  *     summary: Create a meeting
- *     security: [ { cookieAuth: [] } ]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: forceError
- *         schema: { type: boolean }
+ *         required: false
  *         description: Set to "true" to trigger a 500 error
+ *         schema:
+ *           type: string
+ *           enum: [true]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Meeting'
+ *             type: object
+ *             required: [title, bookId, organizerId, startsAt]
+ *             properties:
+ *               title:       { type: string }
+ *               bookId:      { type: string }
+ *               organizerId: { type: string }
+ *               startsAt:    { type: string, format: date-time }
+ *               isOnline:    { type: boolean }
+ *               meetingUrl:  { type: string, format: uri }
+ *               location:    { type: string }
+ *               notes:       { type: string }
+ *               attendees:
+ *                 type: array
+ *                 items: { type: string }
  *     responses:
  *       201:
  *         description: Created
@@ -138,10 +190,6 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *         name: meetingId
  *         required: true
  *         schema: { type: string }
- *       - in: query
- *         name: forceError
- *         schema: { type: boolean }
- *         description: Set to "true" to trigger a 500 error
  *     responses:
  *       200:
  *         description: Meeting found
@@ -161,7 +209,8 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *   put:
  *     tags: [Meetings]
  *     summary: Update a meeting
- *     security: [ { cookieAuth: [] } ]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: meetingId
@@ -169,14 +218,29 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *         schema: { type: string }
  *       - in: query
  *         name: forceError
- *         schema: { type: boolean }
+ *         required: false
  *         description: Set to "true" to trigger a 500 error
+ *         schema:
+ *           type: string
+ *           enum: [true]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Meeting'
+ *             type: object
+ *             properties:
+ *               title:       { type: string }
+ *               bookId:      { type: string }
+ *               organizerId: { type: string }
+ *               startsAt:    { type: string, format: date-time }
+ *               isOnline:    { type: boolean }
+ *               meetingUrl:  { type: string, format: uri }
+ *               location:    { type: string }
+ *               notes:       { type: string }
+ *               attendees:
+ *                 type: array
+ *                 items: { type: string }
  *     responses:
  *       200:
  *         description: Updated
@@ -201,7 +265,8 @@ import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting }
  *   delete:
  *     tags: [Meetings]
  *     summary: Delete a meeting
- *     security: [ { cookieAuth: [] } ]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: meetingId
@@ -234,10 +299,10 @@ const forceError = (req, res, next) => {
   next();
 };
 
+// list
 router.get(
   "/",
   [
-    forceError,
     query("bookId").optional().isMongoId(),
     query("organizerId").optional().isMongoId()
   ],
@@ -245,19 +310,21 @@ router.get(
   listMeetings
 );
 
+// get by id
 router.get(
   "/:meetingId",
-  [ forceError, param("meetingId").isMongoId() ],
+  [ param("meetingId").isMongoId() ],
   runValidation,
   getMeeting
 );
 
+// create
 router.post(
   "/",
   [
     forceError,
     body("_id").not().exists().withMessage("_id is not allowed on create"),
-    body("title").isString().trim().notEmpty(),
+    body("title").isString().trim().notEmpty().isLength({ max: 120 }),
     body("bookId").isMongoId(),
     body("organizerId").isMongoId(),
     body("startsAt").isISO8601(),
@@ -265,20 +332,22 @@ router.post(
     body("meetingUrl").optional().isURL(),
     body("location").optional().isString().isLength({ max: 200 }),
     body("notes").optional().isString().isLength({ max: 1000 }),
-    body("attendees").optional().isArray()
+    body("attendees").optional().isArray(),
+    body("attendees.*").optional().isMongoId()
   ],
   requireAuth,
   runValidation,
   createMeeting
 );
 
+// update
 router.put(
   "/:meetingId",
   [
     forceError,
     param("meetingId").isMongoId(),
     body("_id").not().exists().withMessage("_id cannot be updated"),
-    body("title").optional().isString().trim().notEmpty(),
+    body("title").optional().isString().trim().notEmpty().isLength({ max: 120 }),
     body("bookId").optional().isMongoId(),
     body("organizerId").optional().isMongoId(),
     body("startsAt").optional().isISO8601(),
@@ -286,13 +355,15 @@ router.put(
     body("meetingUrl").optional().isURL(),
     body("location").optional().isString().isLength({ max: 200 }),
     body("notes").optional().isString().isLength({ max: 1000 }),
-    body("attendees").optional().isArray()
+    body("attendees").optional().isArray(),
+    body("attendees.*").optional().isMongoId()
   ],
   requireAuth,
   runValidation,
   updateMeeting
 );
 
+// delete
 router.delete(
   "/:meetingId",
   [ param("meetingId").isMongoId() ],
