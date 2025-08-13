@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import booksRoutes from "./routes/booksRoutes.js";
 import reviewsRoutes from "./routes/reviewsRoutes.js";
+import usersRoutes from "./routes/usersRoutes.js";
+import meetingsRoutes from "./routes/meetingsRoutes.js";
 import { swaggerMiddleware } from "./swagger/swagger.js";
 import { notFound, errorHandler } from "./middleware/error.js";
 
@@ -14,6 +16,8 @@ app.use(express.json());
 // routes
 app.use("/books", booksRoutes);
 app.use("/reviews", reviewsRoutes);
+app.use("/users", usersRoutes);
+app.use("/meetings", meetingsRoutes);
 app.use("/api-docs", ...swaggerMiddleware);
 
 app.get("/", (_req, res) => res.json({ message: "Book Club API up" }));
