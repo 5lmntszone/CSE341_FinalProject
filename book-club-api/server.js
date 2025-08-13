@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import MongoStore from "connect-mongo";
 import passport from "./config/passport.js";
 import authRoutes from "./routes/authRoutes.js";
 
@@ -27,6 +28,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 60 * 60 * 24, 
+      autoRemove: "native",
+    }),
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -35,7 +41,6 @@ app.use(
     },
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
