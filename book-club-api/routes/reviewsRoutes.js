@@ -94,6 +94,14 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
  *   post:
  *     tags: [Reviews]
  *     summary: Create a review
+ *     parameters:
+ *       - in: query
+ *         name: forceError
+ *         required: false
+ *         description: Set to "true" to deliberately trigger a 500 error (for grading/demo)
+ *         schema:
+ *           type: string
+ *           enum: [true]
  *     requestBody:
  *       required: true
  *       content:
@@ -161,6 +169,14 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
 
 const router = Router();
 
+// tiny middleware to force a 500 when ?forceError=true (works on Render too)
+const forceError = (req, res, next) => {
+  if (req.query.forceError === "true") {
+    return next(new Error("Forced error for testing 500"));
+  }
+  next();
+};
+
 router.get(
   "/",
   [ query("bookId").optional().isMongoId() ],
@@ -171,6 +187,7 @@ router.get(
 router.post(
   "/",
   [
+    forceError, 
     body("_id").not().exists().withMessage("_id is not allowed on create"),
     body("bookId").isMongoId(),
     body("userName").isString().trim().notEmpty(),
