@@ -81,6 +81,20 @@
           "Books"
         ],
         "summary": "Create a new book",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "forceError",
+            "required": false,
+            "description": "Set to \"true\" to trigger a 500 error",
+            "schema": {
+              "type": "string",
+              "enum": [
+                true
+              ]
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -222,6 +236,18 @@
             "schema": {
               "type": "string",
               "example": "64b5d2fbcf1c8b0012a1a456"
+            }
+          },
+          {
+            "in": "query",
+            "name": "forceError",
+            "required": false,
+            "description": "Set to \"true\" to trigger a 500 error",
+            "schema": {
+              "type": "string",
+              "enum": [
+                true
+              ]
             }
           }
         ],
@@ -395,6 +421,20 @@
           "Reviews"
         ],
         "summary": "Create a review",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "forceError",
+            "required": false,
+            "description": "Set to \"true\" to trigger a 500 error",
+            "schema": {
+              "type": "string",
+              "enum": [
+                true
+              ]
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
