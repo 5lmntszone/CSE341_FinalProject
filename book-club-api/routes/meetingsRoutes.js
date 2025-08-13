@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { runValidation } from "../middleware/validate.js";
-import { requireAuth } from "../middleware/requireAuth.js";
+import requireAuth from "../middleware/requireAuth.js";
 import { listMeetings, getMeeting, createMeeting, updateMeeting, deleteMeeting } from "../controllers/meetingsController.js";
 
 /**
