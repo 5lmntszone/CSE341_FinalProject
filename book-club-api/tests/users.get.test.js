@@ -27,6 +27,6 @@ describe("Users GET endpoints", () => {
   test("GET /users/:id returns 404 for non-existent id", async () => {
     const missingId = new mongoose.Types.ObjectId();
     const res = await request(app).get(`/users/${missingId.toString()}`);
-    expect([404,500]).toContain(res.status); // prefer 404
+    expect([404,500]).toContain(res.status); 
   });
 });
