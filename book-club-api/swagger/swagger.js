@@ -15,7 +15,10 @@ const options = {
   },
   apis: [
     "./routes/booksRoutes.js",
-    "./routes/reviewsRoutes.js"
+    "./routes/reviewsRoutes.js",
+    "./routes/meetingsRoutes.js",
+    "./routes/usersRoutes.js",
+    "./routes/authRoutes.js"
   ]
 };
 
