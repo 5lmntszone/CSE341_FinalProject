@@ -14,8 +14,8 @@ const options = {
     ]
   },
   apis: [
-    "./routes/*Routes.js",
-    "./routes/authRoutes.js"
+    "./routes/booksRoutes.js",
+    "./routes/reviewsRoutes.js"
   ]
 };
 
