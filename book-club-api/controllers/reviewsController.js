@@ -3,15 +3,25 @@ import Book from "../models/Book.js";
 
 export const listReviews = async (req, res, next) => {
   try {
+    if (req.query.forceError === "true") {
+      throw new Error("Forced 500 error for testing");
+    }
+
     const { bookId } = req.query;
     const q = bookId ? { bookId } : {};
     const reviews = await Review.find(q).sort({ createdAt: -1 });
     res.json(reviews);
-  } catch (e) { next(e); }
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const createReview = async (req, res, next) => {
   try {
+    if (req.query.forceError === "true") {
+      throw new Error("Forced 500 error for testing");
+    }
+
     const { bookId } = req.body;
 
     const exists = await Book.exists({ _id: bookId });
@@ -36,8 +46,14 @@ export const createReview = async (req, res, next) => {
 
 export const deleteReview = async (req, res, next) => {
   try {
+    if (req.query.forceError === "true") {
+      throw new Error("Forced 500 error for testing");
+    }
+
     const review = await Review.findByIdAndDelete(req.params.reviewId);
     if (!review) return res.status(404).json({ message: "Review not found" });
     res.json({ message: "Review deleted" });
-  } catch (e) { next(e); }
+  } catch (e) {
+    next(e);
+  }
 };

@@ -123,7 +123,7 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *       - in: query
  *         name: forceError
  *         required: false
- *         description: Set to "true" to deliberately trigger a 500 error (for demo/grading)
+ *         description: Set to "true" to trigger a 500 error 
  *         schema:
  *           type: string
  *           enum: [true]
@@ -220,7 +220,7 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
  *       - in: query
  *         name: forceError
  *         required: false
- *         description: Set to "true" to deliberately trigger a 500 error (for demo/grading)
+ *         description: Set to "true" to trigger a 500 error
  *         schema:
  *           type: string
  *           enum: [true]
@@ -296,7 +296,6 @@ import { listBooks, getBook, createBook, updateBook, deleteBook } from "../contr
 
 const router = Router();
 
-// force 500 from /api-docs using ?forceError=true
 const forceError = (req, res, next) => {
   if (req.query.forceError === "true") return next(new Error("Forced error for testing 500"));
   next();
