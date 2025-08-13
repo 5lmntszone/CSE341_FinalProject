@@ -17,36 +17,34 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *       type: object
  *       required: [name, email]
  *       properties:
- *         _id: { type: string }
- *         name: { type: string, example: "Barbara Doe" }
- *         email: { type: string, example: "barbara@example.com" }
- *         role: { type: string, enum: [member, admin], example: "member" }
- *         bio: { type: string, example: "Avid reader" }
- *         avatar: { type: string, format: uri, example: "https://example.com/a.jpg" }
- *         joinedAt: { type: string, format: date-time }
- *         createdAt: { type: string, format: date-time }
- *         updatedAt: { type: string, format: date-time }
- *     ValidationErrorResponse:
- *       type: object
- *       properties:
- *         message: { type: string, example: Validation error }
- *         errors:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               msg: { type: string }
- *               param: { type: string }
- *               location: { type: string }
- *     UnauthorizedResponse:
- *       type: object
- *       properties:
- *         message: { type: string, example: Not authenticated }
- *     ServerErrorResponse:
- *       type: object
- *       properties:
- *         message: { type: string, example: Internal server error }
- *         details: { type: string, example: Unexpected database error }
+ *         _id:
+ *           type: string
+ *         name:
+ *           type: string
+ *           example: Barbara Doe
+ *         email:
+ *           type: string
+ *           example: barbara@example.com
+ *         role:
+ *           type: string
+ *           enum: [member, admin]
+ *           example: member
+ *         bio:
+ *           type: string
+ *           example: Avid reader
+ *         avatar:
+ *           type: string
+ *           format: uri
+ *           example: https://example.com/a.jpg
+ *         joinedAt:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
  */
 
 /**
@@ -55,11 +53,6 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *   get:
  *     tags: [Users]
  *     summary: List users
- *     parameters:
- *       - in: query
- *         name: forceError
- *         schema: { type: boolean }
- *         description: Set to "true" to trigger a 500 error
  *     responses:
  *       200:
  *         description: Array of users
@@ -67,21 +60,27 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *           application/json:
  *             schema:
  *               type: array
- *               items: { $ref: '#/components/schemas/User' }
+ *               items:
+ *                 $ref: '#/components/schemas/User'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ServerErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
  *   post:
  *     tags: [Users]
  *     summary: Create a user
- *     security: [ { cookieAuth: [] } ]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: forceError
- *         schema: { type: boolean }
+ *         required: false
  *         description: Set to "true" to trigger a 500 error
+ *         schema:
+ *           type: string
+ *           enum: [true]
  *     requestBody:
  *       required: true
  *       content:
@@ -90,32 +89,36 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *             type: object
  *             required: [name, email]
  *             properties:
- *               name: { type: string }
- *               email: { type: string }
- *               role: { type: string, enum: [member, admin] }
- *               bio: { type: string }
+ *               name:   { type: string }
+ *               email:  { type: string }
+ *               role:   { type: string, enum: [member, admin] }
+ *               bio:    { type: string }
  *               avatar: { type: string, format: uri }
  *     responses:
  *       201:
  *         description: Created
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/User' }
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationErrorResponse'
  *       401:
  *         description: Not authenticated
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/UnauthorizedResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ServerErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
  */
 
 /**
@@ -128,40 +131,45 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *       - in: path
  *         name: userId
  *         required: true
- *         schema: { type: string }
- *       - in: query
- *         name: forceError
- *         schema: { type: boolean }
- *         description: Set to "true" to trigger a 500 error
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: User found
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/User' }
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationErrorResponse'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ServerErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
  *   put:
  *     tags: [Users]
  *     summary: Update a user
- *     security: [ { cookieAuth: [] } ]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
  *         required: true
- *         schema: { type: string }
+ *         schema:
+ *           type: string
  *       - in: query
  *         name: forceError
- *         schema: { type: boolean }
+ *         required: false
  *         description: Set to "true" to trigger a 500 error
+ *         schema:
+ *           type: string
+ *           enum: [true]
  *     requestBody:
  *       required: true
  *       content:
@@ -169,41 +177,47 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *           schema:
  *             type: object
  *             properties:
- *               name: { type: string }
- *               email: { type: string }
- *               role: { type: string, enum: [member, admin] }
- *               bio: { type: string }
+ *               name:   { type: string }
+ *               email:  { type: string }
+ *               role:   { type: string, enum: [member, admin] }
+ *               bio:    { type: string }
  *               avatar: { type: string, format: uri }
  *     responses:
  *       200:
  *         description: Updated
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/User' }
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad request
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationErrorResponse'
  *       401:
  *         description: Not authenticated
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/UnauthorizedResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ServerErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
  *   delete:
  *     tags: [Users]
  *     summary: Delete a user
- *     security: [ { cookieAuth: [] } ]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
  *         required: true
- *         schema: { type: string }
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: User deleted
@@ -211,17 +225,20 @@ import { listUsers, getUser, createUser, updateUser, deleteUser } from "../contr
  *         description: Bad request
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ValidationErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationErrorResponse'
  *       401:
  *         description: Not authenticated
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/UnauthorizedResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/UnauthorizedResponse'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/ServerErrorResponse' }
+ *             schema:
+ *               $ref: '#/components/schemas/ServerErrorResponse'
  */
 
 const router = Router();
@@ -231,10 +248,13 @@ const forceError = (req, res, next) => {
   next();
 };
 
-router.get("/", [forceError], listUsers);
+// list
+router.get("/", listUsers);
 
-router.get("/:userId", [forceError, param("userId").isMongoId()], runValidation, getUser);
+// get by id
+router.get("/:userId", [param("userId").isMongoId()], runValidation, getUser);
 
+// create
 router.post(
   "/",
   [
@@ -251,6 +271,7 @@ router.post(
   createUser
 );
 
+// update
 router.put(
   "/:userId",
   [
@@ -268,6 +289,7 @@ router.put(
   updateUser
 );
 
+// delete
 router.delete("/:userId", [param("userId").isMongoId()], requireAuth, runValidation, deleteUser);
 
 export default router;
