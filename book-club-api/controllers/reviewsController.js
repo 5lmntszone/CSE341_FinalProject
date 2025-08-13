@@ -1,4 +1,5 @@
 import Review from "../models/Review.js";
+import Book from "../models/Book.js";
 
 export const listReviews = async (req, res, next) => {
   try {
@@ -11,10 +12,26 @@ export const listReviews = async (req, res, next) => {
 
 export const createReview = async (req, res, next) => {
   try {
-    if ("_id" in req.body) delete req.body._id;
+    const { bookId } = req.body;
+
+    const exists = await Book.exists({ _id: bookId });
+    if (!exists) {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: [{
+          msg: "bookId does not reference an existing book",
+          param: "bookId",
+          location: "body"
+        }]
+      });
+    }
+
+    if ("_id" in req.body) delete req.body._id; 
     const review = await Review.create(req.body);
     return res.status(201).json(review);
-  } catch (e) { next(e); }
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const deleteReview = async (req, res, next) => {
